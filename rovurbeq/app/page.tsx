@@ -85,6 +85,7 @@ const CATEGORIES = [
 // ── Page ──────────────────────────────────────────────────────────────────────
 export default function Home() {
   const [activeLayers, setActiveLayers] = useState<string[]>(["asili"]);
+  const [showZones, setShowZones] = useState(false);
   const [pointCount, setPointCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [chatOpen, setChatOpen] = useState(true);
@@ -205,6 +206,46 @@ export default function Home() {
           </button>
 
           {/* Layer groups */}
+          <div className="mb-2">
+            <p className="mb-1.5 px-1 text-[9px] font-bold uppercase tracking-widest text-gray-400">
+              Quartieri
+            </p>
+            <button
+              onClick={() => setShowZones((z) => !z)}
+              className="flex w-full items-center justify-between rounded-xl border-2 px-3 py-2 text-left transition-all duration-150 active:scale-95"
+              style={{
+                borderColor: showZones ? "#3730a3" : "#d1d5db",
+                background: showZones ? "#e0e7ff" : "#f9fafb",
+                boxShadow: showZones ? `3px 3px 0 #3730a3` : "2px 2px 0 #d1d5db",
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <span className="text-sm">🗺️</span>
+                <span
+                  className="text-xs font-bold"
+                  style={{ color: showZones ? "#3730a3" : "#6b7280" }}
+                >
+                  Zone Voronoi
+                </span>
+              </div>
+              {showZones && (
+                <svg
+                  className="h-3.5 w-3.5 flex-shrink-0"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                >
+                  <path
+                    d="M3 8l3.5 3.5L13 4"
+                    stroke="#3730a3"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+
           {CATEGORIES.map((cat) => (
             <div key={cat.label}>
               <p className="mb-1.5 px-1 text-[9px] font-bold uppercase tracking-widest text-gray-400">
@@ -253,6 +294,7 @@ export default function Home() {
           <div className="relative m-4 flex-1 overflow-hidden rounded-2xl border-2 border-indigo-900 shadow-[6px_6px_0_#1e1b4b]">
             <LeafletMap
               activeLayers={activeLayers}
+              showZones={showZones}
               onCountChange={handleCount}
               onLoadingChange={handleLoading}
             />
