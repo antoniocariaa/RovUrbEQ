@@ -5,31 +5,30 @@ export interface IZone extends Document {
   name: string;
   place?: string;
   geometry: {
-    type: 'Point';
-    coordinates: [number, number]; // [lng, lat]
+    type: string;
+    coordinates: number[];
   };
-  properties: Record<string, unknown>;
+  properties: Record<string, any>;
 }
 
 const ZoneSchema: Schema = new Schema({
-  osmId: { type: String, required: true },
+  osmId: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   place: { type: String },
   geometry: {
     type: {
       type: String,
-      enum: ['Point'],
-      required: true,
+      enum: ['Point', 'Polygon', 'MultiPolygon'],
+      required: true
     },
     coordinates: {
-      type: [Number],
-      required: true,
-    },
+      type: Schema.Types.Mixed,
+      required: true
+    }
   },
-  properties: { type: Schema.Types.Mixed },
+  properties: { type: Schema.Types.Mixed }
 });
 
 ZoneSchema.index({ geometry: '2dsphere' });
 
-export const Zone: Model<IZone> =
-  mongoose.models?.Zone || mongoose.model<IZone>('Zone', ZoneSchema, 'zones');
+export const Zone: Model<IZone> = mongoose.models?.Zone || mongoose.model<IZone>('Zone', ZoneSchema, 'zones');
