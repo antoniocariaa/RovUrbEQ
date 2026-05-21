@@ -494,9 +494,6 @@ urban-equity/
 │   └── favicon.ico
 ├── src/
 │   ├── app/                # Next.js App Router
-│   │   ├── (auth)/         # Pagine autenticazione
-│   │   │   ├── login/
-│   │   │   └── register/
 │   │   ├── (dashboard)/    # Pannello PA
 │   │   │   └── analytics/
 │   │   ├── (map)/          # Mappa interattiva
