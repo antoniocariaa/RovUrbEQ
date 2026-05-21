@@ -68,6 +68,7 @@ async function test() {
   try {
     const hull = turf.convex(featureCollection);
     console.log("Convex hull computed.");
+    if (!hull) throw new Error("convex returned null");
     const bufferedHull = turf.buffer(hull, 0.5, { units: "kilometers" });
     console.log("Buffered hull computed.");
   } catch (err) {
