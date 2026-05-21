@@ -8,6 +8,7 @@ import L from "leaflet";
 import "leaflet.markercluster";
 import { useEffect, useRef, useCallback } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import ZoneLayer from "./ZoneLayer";
 
 // ── Fix Leaflet's broken default icon in Next.js/webpack ─────────────────────
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -26,6 +27,7 @@ export { LAYERS } from "@/lib/layers";
 // ── Types ─────────────────────────────────────────────────────────────────────
 export interface GeoPoint {
   id: string;
+  dbId: string;
   name: string;
   lat: number;
   lng: number;
@@ -86,6 +88,16 @@ function buildPopupHTML(point: GeoPoint, layer: LayerConfig): string {
       <p style="font-size:13px;font-weight:800;color:#1e1b4b;line-height:1.35;margin:0 0 6px">${point.name}</p>
       ${addr}${phone}${web}
       <p style="font-size:9px;color:#9ca3af;margin-top:6px;border-top:1px solid #f3f4f6;padding-top:4px">${point.lat.toFixed(5)}, ${point.lng.toFixed(5)}</p>
+      <!-- Hidden delete functionality
+      <button 
+        onclick="if(confirm('Sei sicuro di voler eliminare questo punto?')) window.dispatchEvent(new CustomEvent('delete-location', { detail: { dbId: '${point.dbId}', layerId: '${layer.id}' } }))"
+        style="margin-top: 8px; width: 100%; padding: 6px 0; background: #fee2e2; color: #991b1b; border: 1.5px solid #991b1b; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; transition: all 0.2s;"
+        onmouseover="this.style.background='#fecaca'"
+        onmouseout="this.style.background='#fee2e2'"
+      >
+        🗑️ Elimina punto
+      </button>
+      -->
     </div>`;
 }
 
@@ -205,6 +217,38 @@ function ClusterLayer({ activeLayers, onCountChange, onLoadingChange }: ClusterL
     return () => { abortRef.current?.abort(); };
   }, [syncLayers]);
 
+  // Handle delete events
+  useEffect(() => {
+    const handleDelete = async (e: Event) => {
+      const { dbId, layerId } = (e as CustomEvent).detail;
+      onLoadingChange(true);
+      try {
+        const res = await fetch(`/api/locations/${dbId}`, { method: 'DELETE' });
+        if (res.ok) {
+          // Invalidate cache
+          _cache.delete(layerId);
+          // Remove from map to trigger a fresh re-fetch
+          const group = groupsRef.current.get(layerId);
+          if (group) {
+            map.removeLayer(group);
+            groupsRef.current.delete(layerId);
+          }
+          syncLayers();
+        } else {
+          alert("Errore durante l'eliminazione del punto.");
+        }
+      } catch (err) {
+        console.error("Delete error:", err);
+        alert("Errore di rete durante l'eliminazione.");
+      } finally {
+        onLoadingChange(false);
+      }
+    };
+
+    window.addEventListener('delete-location', handleDelete);
+    return () => window.removeEventListener('delete-location', handleDelete);
+  }, [syncLayers, map, onLoadingChange]);
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -220,6 +264,7 @@ function ClusterLayer({ activeLayers, onCountChange, onLoadingChange }: ClusterL
 // ── Props ─────────────────────────────────────────────────────────────────────
 export interface LeafletMapProps {
   activeLayers: string[];
+  showZones?: boolean;
   onCountChange?: (n: number) => void;
   onLoadingChange?: (loading: boolean) => void;
 }
@@ -227,18 +272,28 @@ export interface LeafletMapProps {
 const ROVERETO: [number, number] = [45.8904, 11.0401];
 
 // ── Main export ───────────────────────────────────────────────────────────────
-export default function LeafletMap({ activeLayers, onCountChange, onLoadingChange }: LeafletMapProps) {
+export default function LeafletMap({ activeLayers, showZones = false, onCountChange, onLoadingChange }: LeafletMapProps) {
+  // Define bounding box for Rovereto to lock the map view (with wider margins)
+  const ROVERETO_BOUNDS: L.LatLngBoundsExpression = [
+    [45.7, 10.8], // South-West
+    [46.1, 11.3], // North-East
+  ];
+
   return (
     <MapContainer
       center={ROVERETO}
       zoom={14}
+      minZoom={11}
       className="h-full w-full"
       preferCanvas={true}   // use Canvas renderer — far faster for many markers
+      maxBounds={ROVERETO_BOUNDS}
+      maxBoundsViscosity={1.0}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
+      <ZoneLayer showZones={showZones} />
       <ClusterLayer
         activeLayers={activeLayers}
         onCountChange={onCountChange ?? (() => {})}

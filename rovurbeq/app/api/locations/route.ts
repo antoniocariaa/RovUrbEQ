@@ -41,6 +41,7 @@ export async function GET(req: NextRequest) {
 
       return [{
         id: `${layerId}-${(doc._id as { toString(): string }).toString() ?? i}`,
+        dbId: (doc._id as { toString(): string }).toString() ?? "",
         name:
           (p["name"] as string) ??
           (p["amenity"] as string) ??

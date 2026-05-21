@@ -29,6 +29,12 @@ body {
   padding: 0 !important;
 }
 
+.zone-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .leaflet-popup-content {
   margin: 0 !important;
 }
