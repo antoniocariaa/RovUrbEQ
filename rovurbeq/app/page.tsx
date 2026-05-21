@@ -319,7 +319,7 @@ export default function Home() {
             chatOpen ? "chat-panel-open w-96" : "chat-panel-closed"
           }`}
         >
-          {chatOpen && <AiChat />}
+          {chatOpen && <AiChat selectedZone={selectedZone} />}
         </aside>
       </div>
     </div>
