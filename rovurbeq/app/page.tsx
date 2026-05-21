@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { LAYERS, type LayerConfig } from "@/lib/layers";
+import AiChat from "@/components/chat/AiChat";
 
 // ── Dynamic import with ssr:false ─────────────────────────────────────────────
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
@@ -86,6 +87,7 @@ export default function Home() {
   const [activeLayers, setActiveLayers] = useState<string[]>(["asili"]);
   const [pointCount, setPointCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [chatOpen, setChatOpen] = useState(true);
 
   function toggleLayer(id: string) {
     setActiveLayers((prev) =>
@@ -167,6 +169,18 @@ export default function Home() {
             ✦ Hackathon 2026
           </span>
         </div>
+
+        {/* Chat toggle */}
+        <button
+          onClick={() => setChatOpen((v) => !v)}
+          className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 px-4 py-2 text-xs font-extrabold uppercase tracking-wider shadow-[3px_3px_0_#1e1b4b] transition-colors"
+          style={{
+            background: chatOpen ? "#6366f1" : "#f0f0ff",
+            color: chatOpen ? "#fff" : "#3730a3",
+          }}
+        >
+          🤖 {chatOpen ? "Chiudi Chat" : "AI Chat"}
+        </button>
       </header>
 
       {/* ── Body ────────────────────────────────────────────────────────────── */}
@@ -244,6 +258,15 @@ export default function Home() {
             />
           </div>
         </main>
+
+        {/* ── Chat panel ──────────────────────────────────────────────────── */}
+        <aside
+          className={`chat-panel flex-shrink-0 border-l-2 border-indigo-900 ${
+            chatOpen ? "chat-panel-open w-96" : "chat-panel-closed"
+          }`}
+        >
+          {chatOpen && <AiChat />}
+        </aside>
       </div>
     </div>
   );
