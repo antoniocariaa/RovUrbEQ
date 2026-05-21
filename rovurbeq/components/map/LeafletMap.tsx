@@ -267,12 +267,13 @@ export interface LeafletMapProps {
   showZones?: boolean;
   onCountChange?: (n: number) => void;
   onLoadingChange?: (loading: boolean) => void;
+  onZoneClick?: (zoneName: string) => void;
 }
 
 const ROVERETO: [number, number] = [45.8904, 11.0401];
 
 // ── Main export ───────────────────────────────────────────────────────────────
-export default function LeafletMap({ activeLayers, showZones = false, onCountChange, onLoadingChange }: LeafletMapProps) {
+export default function LeafletMap({ activeLayers, showZones = false, onCountChange, onLoadingChange, onZoneClick }: LeafletMapProps) {
   // Define bounding box for Rovereto to lock the map view (with wider margins)
   const ROVERETO_BOUNDS: L.LatLngBoundsExpression = [
     [45.7, 10.8], // South-West
@@ -293,7 +294,7 @@ export default function LeafletMap({ activeLayers, showZones = false, onCountCha
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
       />
-      <ZoneLayer showZones={showZones} />
+      <ZoneLayer showZones={showZones} onZoneClick={onZoneClick} />
       <ClusterLayer
         activeLayers={activeLayers}
         onCountChange={onCountChange ?? (() => {})}

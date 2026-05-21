@@ -4,6 +4,7 @@ import { useState, useCallback } from "react";
 import dynamic from "next/dynamic";
 import { LAYERS, type LayerConfig } from "@/lib/layers";
 import AiChat from "@/components/chat/AiChat";
+import ZoneDetailPanel from "@/components/equity/ZoneDetailPanel";
 
 // ── Dynamic import with ssr:false ─────────────────────────────────────────────
 const LeafletMap = dynamic(() => import("@/components/map/LeafletMap"), {
@@ -89,6 +90,7 @@ export default function Home() {
   const [pointCount, setPointCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [chatOpen, setChatOpen] = useState(true);
+  const [selectedZone, setSelectedZone] = useState<string | null>(null);
 
   function toggleLayer(id: string) {
     setActiveLayers((prev) =>
@@ -105,6 +107,7 @@ export default function Home() {
   // Stable callbacks — won't cause LeafletMap to re-render
   const handleCount = useCallback((n: number) => setPointCount(n), []);
   const handleLoading = useCallback((v: boolean) => setIsLoading(v), []);
+  const handleZoneClick = useCallback((name: string) => setSelectedZone(name), []);
 
   const layerById = Object.fromEntries(LAYERS.map((l) => [l.id, l]));
   const allActive = activeLayers.length === LAYERS.length;
@@ -267,7 +270,16 @@ export default function Home() {
               showZones={showZones}
               onCountChange={handleCount}
               onLoadingChange={handleLoading}
+              onZoneClick={handleZoneClick}
             />
+
+            {/* Zone equity detail overlay */}
+            {selectedZone && (
+              <ZoneDetailPanel
+                zoneName={selectedZone}
+                onClose={() => setSelectedZone(null)}
+              />
+            )}
           </div>
         </main>
 
@@ -277,7 +289,7 @@ export default function Home() {
             chatOpen ? "chat-panel-open w-96" : "chat-panel-closed"
           }`}
         >
-          {chatOpen && <AiChat />}
+          {chatOpen && <AiChat selectedZone={selectedZone} />}
         </aside>
       </div>
     </div>

@@ -4,14 +4,20 @@ import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import L from "leaflet";
 import * as turf from "@turf/turf";
+import type { Feature, Polygon, GeoJsonProperties } from "geojson";
 
 interface ZoneLayerProps {
   showZones: boolean;
+  onZoneClick?: (zoneName: string) => void;
 }
 
-export default function ZoneLayer({ showZones }: ZoneLayerProps) {
+export default function ZoneLayer({ showZones, onZoneClick }: ZoneLayerProps) {
   const map = useMap();
   const layerRef = useRef<L.GeoJSON | null>(null);
+  // Keep a ref to the latest callback so we don't re-create the layer when
+  // only the callback identity changes.
+  const onZoneClickRef = useRef(onZoneClick);
+  onZoneClickRef.current = onZoneClick;
 
   useEffect(() => {
     let active = true;
@@ -54,7 +60,7 @@ export default function ZoneLayer({ showZones }: ZoneLayerProps) {
         const voronoiPolygons = turf.voronoi(data, { bbox: paddedBbox });
 
         // Clip Voronoi polygons to the city boundary and merge properties
-        const clippedFeatures: turf.Feature<turf.Polygon, turf.GeoJsonProperties>[] = [];
+        const clippedFeatures: Feature<Polygon, GeoJsonProperties>[] = [];
 
         voronoiPolygons.features.forEach((polygon, index) => {
           if (!polygon) return;
@@ -64,7 +70,7 @@ export default function ZoneLayer({ showZones }: ZoneLayerProps) {
             const clipped = turf.intersect(turf.featureCollection([polygon, boundary]));
             if (clipped && clipped.geometry.type === 'Polygon') {
               clipped.properties = data.features[index].properties;
-              clippedFeatures.push(clipped as turf.Feature<turf.Polygon, turf.GeoJsonProperties>);
+              clippedFeatures.push(clipped as Feature<Polygon, GeoJsonProperties>);
             } else if (clipped && clipped.geometry.type === 'MultiPolygon') {
                // Just take the first polygon if it results in multipolygon
                clipped.properties = data.features[index].properties;
@@ -112,6 +118,9 @@ export default function ZoneLayer({ showZones }: ZoneLayerProps) {
               },
               mouseout: (e) => {
                 geoJsonLayer.resetStyle(e.target);
+              },
+              click: () => {
+                onZoneClickRef.current?.(name);
               },
             });
           },
