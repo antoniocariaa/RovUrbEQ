@@ -112,83 +112,23 @@ export default function Home() {
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-[#f5f4ff] font-sans">
 
-      {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <header className="flex flex-shrink-0 items-center justify-between border-b-2 border-indigo-900 bg-white px-6 py-3 shadow-[0_3px_0_#1e1b4b]">
-        {/* Brand */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl border-2 border-indigo-900 bg-indigo-600 shadow-[3px_3px_0_#1e1b4b]">
-            <span className="text-xl">🏙️</span>
-          </div>
-          <div className="leading-none">
-            <h1 className="text-lg font-extrabold tracking-tight text-indigo-900">
-              Urban Equity
-            </h1>
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-indigo-400">
-              Rovereto — Hackathon PoC
-            </p>
-          </div>
-        </div>
-
-        {/* Stats pills */}
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 bg-indigo-50 px-4 py-2 shadow-[3px_3px_0_#1e1b4b]">
-            <span className="text-base">{isLoading ? "⏳" : "🗂️"}</span>
-            <div className="leading-tight">
-              <span className="block text-sm font-extrabold text-indigo-900">
-                {activeLayers.length}/{LAYERS.length}
-              </span>
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
-                Layer attivi
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 bg-indigo-50 px-4 py-2 shadow-[3px_3px_0_#1e1b4b]">
-            <span className="text-base">📌</span>
-            <div className="leading-tight">
-              <span className="block text-sm font-extrabold text-indigo-900">
-                {isLoading ? "…" : pointCount.toLocaleString("it-IT")}
-              </span>
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
-                Punti mappa
-              </span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 bg-indigo-50 px-4 py-2 shadow-[3px_3px_0_#1e1b4b]">
-            <span className="text-base">📍</span>
-            <div className="leading-tight">
-              <span className="block text-sm font-extrabold text-indigo-900">Rovereto</span>
-              <span className="block text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
-                Comune TN
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Hackathon badge */}
-        <div className="rounded-xl border-2 border-emerald-700 bg-emerald-50 px-4 py-1.5 shadow-[3px_3px_0_#14532d]">
-          <span className="text-xs font-extrabold uppercase tracking-widest text-emerald-700">
-            ✦ Hackathon 2026
-          </span>
-        </div>
-
-        {/* Chat toggle */}
-        <button
-          onClick={() => setChatOpen((v) => !v)}
-          className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 px-4 py-2 text-xs font-extrabold uppercase tracking-wider shadow-[3px_3px_0_#1e1b4b] transition-colors"
-          style={{
-            background: chatOpen ? "#6366f1" : "#f0f0ff",
-            color: chatOpen ? "#fff" : "#3730a3",
-          }}
-        >
-          🤖 {chatOpen ? "Chiudi Chat" : "AI Chat"}
-        </button>
-      </header>
-
       {/* ── Body ────────────────────────────────────────────────────────────── */}
       <div className="flex flex-1 overflow-hidden">
 
         {/* ── Sidebar ─────────────────────────────────────────────────────── */}
         <aside className="flex w-64 flex-shrink-0 flex-col gap-3 overflow-y-auto border-r-2 border-indigo-900 bg-white p-3">
+          {/* Brand */}
+          <div className="flex items-center gap-3 mb-1 mt-1 px-1">
+            <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl border-2 border-indigo-900 bg-indigo-600 shadow-[3px_3px_0_#1e1b4b]">
+              <span className="text-xl">🏙️</span>
+            </div>
+            <h1 className="text-2xl font-extrabold tracking-tight text-indigo-900">
+              RovUrbEq
+            </h1>
+          </div>
+
+          <div className="mb-1 h-0.5 w-full rounded-full bg-indigo-100"></div>
+
           <p className="px-1 text-[10px] font-bold uppercase tracking-widest text-indigo-400">
             Layer dati
           </p>
@@ -268,30 +208,60 @@ export default function Home() {
             </div>
           ))}
 
-          {/* Footer note */}
-          <div className="mt-auto rounded-xl border-2 border-gray-200 bg-gray-50 p-3">
-            <p className="text-[9px] font-bold uppercase tracking-widest text-gray-400">
-              Fonte dati
-            </p>
-            <p className="mt-0.5 text-[10px] font-semibold text-gray-500">
-              OpenStreetMap / Overpass Turbo
-            </p>
-            <p className="text-[9px] text-gray-400">© ODbL Contributors</p>
-          </div>
+          
         </aside>
 
         {/* ── Map area ────────────────────────────────────────────────────── */}
         <main className="relative flex flex-1 flex-col overflow-hidden">
-          {/* Top strip */}
-          <div className="flex flex-shrink-0 items-center gap-2 border-b-2 border-indigo-900 bg-white px-4 py-2">
-            <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-emerald-500" />
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-700">
-              Live map — Rovereto (45.8904°N, 11.0401°E) · OpenStreetMap Dati © ODbL
-            </span>
-          </div>
-
           {/* Map */}
           <div className="relative m-4 flex-1 overflow-hidden rounded-2xl border-2 border-indigo-900 shadow-[6px_6px_0_#1e1b4b]">
+            {/* Overlay Controls */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] flex items-start justify-between p-4">
+              
+              <div className="flex-1" /> {/* Spacer sinistro */}
+
+              {/* Stats pills in posizione centrale */}
+              <div className="pointer-events-auto flex flex-shrink-0 items-start justify-center gap-3 flex-1">
+                <div className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 bg-white/90 px-4 py-2 shadow-[3px_3px_0_#1e1b4b] backdrop-blur-sm">
+                  <span className="text-base">{isLoading ? "⏳" : "🗂️"}</span>
+                  <div className="leading-tight">
+                    <span className="block text-sm font-extrabold text-indigo-900">
+                      {activeLayers.length}/{LAYERS.length}
+                    </span>
+                    <span className="block text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
+                      Layer attivi
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 rounded-xl border-2 border-indigo-900 bg-white/90 px-4 py-2 shadow-[3px_3px_0_#1e1b4b] backdrop-blur-sm">
+                  <span className="text-base">📌</span>
+                  <div className="leading-tight">
+                    <span className="block text-sm font-extrabold text-indigo-900">
+                      {isLoading ? "…" : pointCount.toLocaleString("it-IT")}
+                    </span>
+                    <span className="block text-[10px] font-semibold uppercase tracking-wider text-indigo-400">
+                      Punti mappa
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Chat toggle in alto a destra */}
+              <div className="pointer-events-auto flex flex-1 items-start justify-end">
+                <button
+                  onClick={() => setChatOpen((v) => !v)}
+                  className="flex h-11 w-11 items-center justify-center rounded-xl border-2 border-indigo-900 shadow-[3px_3px_0_#1e1b4b] transition-colors"
+                  style={{
+                    background: chatOpen ? "#f0f0ff" : "#6366f1",
+                    color: chatOpen ? "#3730a3" : "#fff",
+                  }}
+                  title={chatOpen ? "Chiudi Chat" : "AI Chat"}
+                >
+                  <span className="text-lg">{chatOpen ? "➡️" : "✨"}</span>
+                </button>
+              </div>
+            </div>
+
             <LeafletMap
               activeLayers={activeLayers}
               showZones={showZones}

@@ -125,7 +125,7 @@ export default function AiChat() {
       {/* ── Header ───────────────────────────────────────────────────────── */}
       <div className="flex flex-shrink-0 items-center gap-2.5 border-b-2 border-indigo-900 bg-gradient-to-r from-indigo-50 to-violet-50 px-4 py-3">
         <div className="flex h-8 w-8 items-center justify-center rounded-lg border-2 border-indigo-900 bg-indigo-600 shadow-[2px_2px_0_#1e1b4b]">
-          <span className="text-sm">🤖</span>
+          <span className="text-sm">✨</span>
         </div>
         <div className="leading-none">
           <p className="text-sm font-extrabold text-indigo-900">AI Assistant</p>
