@@ -1,0 +1,16 @@
+{
+"type": "FeatureCollection",
+"name": "farmacia",
+"features": [
+{ "type": "Feature", "properties": { "Name": "Farmacia Comunale Viale Trento, 33/2" }, "geometry": { "type": "Point", "coordinates": [ 11.0419804, 45.9013739, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia Comunale Via Paoli" }, "geometry": { "type": "Point", "coordinates": [ 11.0402286, 45.8917506, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia Thaler" }, "geometry": { "type": "Point", "coordinates": [ 11.0404181, 45.8899005, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Lafarmacia. Cobelli" }, "geometry": { "type": "Point", "coordinates": [ 11.0431848, 45.8900646, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia San Giorgio s.r.l. Rovereto" }, "geometry": { "type": "Point", "coordinates": [ 11.0283223, 45.8942206, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia Soave" }, "geometry": { "type": "Point", "coordinates": [ 11.0444229, 45.8883803, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia Barbacovi" }, "geometry": { "type": "Point", "coordinates": [ 11.0397061, 45.8830793, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia de Probizer" }, "geometry": { "type": "Point", "coordinates": [ 11.032556, 45.9152035, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia Comunale Via Benacense" }, "geometry": { "type": "Point", "coordinates": [ 11.0333982, 45.8784652, 0.0 ] } },
+{ "type": "Feature", "properties": { "Name": "Farmacia Pavani" }, "geometry": { "type": "Point", "coordinates": [ 11.0279097, 45.8858588, 0.0 ] } }
+]
+}
