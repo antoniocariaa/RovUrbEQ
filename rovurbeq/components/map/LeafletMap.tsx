@@ -35,37 +35,6 @@ export interface GeoPoint {
   website?: string;
 }
 
-// ── Geometry helpers ──────────────────────────────────────────────────────────
-function polygonCentroid(coords: number[][][]): [number, number] {
-  const ring = coords[0];
-  let sumLat = 0, sumLng = 0;
-  for (const [lo, la] of ring) { sumLng += lo; sumLat += la; }
-  return [sumLat / ring.length, sumLng / ring.length];
-}
-
-function extractLatLng(geometry: GeoJSON.Geometry): [number, number] | null {
-  switch (geometry.type) {
-    case "Point": {
-      const [lng, lat] = geometry.coordinates as [number, number];
-      return [lat, lng];
-    }
-    case "Polygon":
-      return polygonCentroid(geometry.coordinates as number[][][]);
-    case "MultiPolygon":
-      return polygonCentroid((geometry.coordinates as number[][][][])[0]);
-    case "LineString": {
-      const c = geometry.coordinates as number[][];
-      const m = Math.floor(c.length / 2);
-      return [c[m][1], c[m][0]];
-    }
-    case "MultiLineString": {
-      const c = (geometry.coordinates as number[][][])[0];
-      const m = Math.floor(c.length / 2);
-      return [c[m][1], c[m][0]];
-    }
-    default: return null;
-  }
-}
 
 // ── Global fetch cache — persists across re-renders / layer toggles ───────────
 const _cache = new Map<string, GeoPoint[]>();
@@ -74,28 +43,14 @@ async function fetchLayer(layer: LayerConfig, signal: AbortSignal): Promise<GeoP
   // Return cached result immediately — no network round-trip
   if (_cache.has(layer.id)) return _cache.get(layer.id)!;
 
-  const res = await fetch(layer.path, { signal });
-  if (!res.ok) return [];
-  const geojson: GeoJSON.FeatureCollection = await res.json();
+  // Fetch from the Next.js API Route which queries MongoDB server-side
+  const res = await fetch(`/api/locations?layerId=${layer.id}`, { signal });
+  if (!res.ok) {
+    console.error(`[LeafletMap] Failed to fetch layer "${layer.id}":`, res.status);
+    return [];
+  }
 
-  const points: GeoPoint[] = [];
-  geojson.features.forEach((f, i) => {
-    if (!f.geometry) return;
-    const coords = extractLatLng(f.geometry);
-    if (!coords) return;
-    const [lat, lng] = coords;
-    const p = f.properties ?? {};
-    points.push({
-      id: `${layer.id}-${p["@id"] ?? i}`,
-      name: p.name ?? p.amenity ?? p.shop ?? p.leisure ?? p.highway ?? layer.label,
-      lat, lng,
-      layerId: layer.id,
-      address: [p["addr:street"], p["addr:housenumber"]].filter(Boolean).join(" ") || undefined,
-      phone: p.phone ?? p.contact_phone ?? undefined,
-      website: p.website ?? undefined,
-    });
-  });
-
+  const points: GeoPoint[] = await res.json();
   _cache.set(layer.id, points);
   return points;
 }
