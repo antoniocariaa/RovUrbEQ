@@ -1,10 +1,12 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { IZone } from './Zone';
 
 export interface ILocation extends Document {
   category: string;
   subcategory: string;
   name?: string;
   type?: string;
+  quartiere?: mongoose.Types.ObjectId | IZone;
   geometry: {
     type: string;
     coordinates: any;
@@ -17,6 +19,7 @@ const LocationSchema: Schema = new Schema({
   subcategory: { type: String, required: true },
   name: { type: String },
   type: { type: String },
+  quartiere: { type: Schema.Types.ObjectId, ref: 'Zone' },
   geometry: {
     type: {
       type: String,
