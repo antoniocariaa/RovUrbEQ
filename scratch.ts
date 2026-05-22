@@ -1,7 +1,12 @@
 import mongoose from "mongoose";
 import * as turf from "@turf/turf";
+import "dotenv/config";
 
-const MONGODB_URI = "mongodb+srv://antoniocaria1_db_user:uKYj4nbMZj2JO2ai@cluster0.pxbazdu.mongodb.net/test";
+const MONGODB_URI = process.env.MONGODB_URI as string;
+
+if (!MONGODB_URI) {
+  throw new Error("MONGODB_URI non è definita nel file .env");
+}
 
 async function test() {
   await mongoose.connect(MONGODB_URI);
