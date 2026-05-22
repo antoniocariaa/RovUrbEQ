@@ -11,7 +11,7 @@ Questo progetto è stato sviluppato durante il **Campionato Universitario AI (CU
 
 ## 🚀 Live Deployment
 
-> [**Prova l'applicazione live qui!**](#)
+> [**Prova l'applicazione live qui!**](https://rovurbeq.vercel.app/)
 
 ---
 
