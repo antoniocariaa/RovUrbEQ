@@ -17,8 +17,6 @@ Questo progetto è stato sviluppato durante il **Campionato Universitario AI (CU
 
 ## 📸 Screenshot dell'Applicazione
 
-*Qui puoi mostrare al mondo il lavoro fatto. Inserisci gli screenshot che mettono in risalto la mappa, le analytics (come il Radar Chart) o la UI dell'AI Chat!*
-
 | Mappa Interattiva | Analisi ed Equità |
 |:---:|:---:|
 | ![Screenshot Mappa](public/mappa.png) | ![Screenshot Radar Chart](public/chart.png) |
@@ -55,6 +53,14 @@ L'applicazione è stata concepita con un focus sull'efficienza e le prestazioni,
 - **AI Chat Assistant**: un chatbot di supporto, in grado di aiutare e discutere i dati presenti nella mappa.
 - **Integrazione Dati Complessi**: gestione di dati frammentati su Servizi Sanitari, Comunità, Ragazzi, Mobilità analizzati e interpolati (anche grazie agli algoritmi basati su Turf.js).
 
+
+---
+
+## 👥 Team
+
+- **[Ali Raja Faizan](https://github.com/FA-05)**
+- **[Caria Antonio](https://github.com/antoniocariaa)**
+- **[Pedron Federico](https://github.com/federicopedron05)**
 
 ---
 *Creato con 💡 e ☕ per il CUniAI Hackathon.*
